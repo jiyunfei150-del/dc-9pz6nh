@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>记忆系统架构流程图</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: #fff;
+    border-bottom: 1px solid #e8ecf0;
+    padding: 32px 48px 28px;
+  }
+  .header-inner { max-width: 1100px; margin: 0 auto; }
+  .header h1 { font-size: 24px; font-weight: 700; color: #1a1a2e; letter-spacing: -0.3px; }
+  .header p { font-size: 14px; color: #6b7280; margin-top: 6px; }
+  .stats { display: flex; gap: 32px; margin-top: 20px; }
+  .stat { display: flex; flex-direction: column; }
+  .stat-value { font-size: 20px; font-weight: 700; color: #2563eb; }
+  .stat-label { font-size: 12px; color: #9ca3af; margin-top: 2px; }
+
+  /* Main */
+  .main { max-width: 1100px; margin: 40px auto; padding: 0 48px; }
+
+  /* Flow */
+  .flow-section { background: #fff; border: 1px solid #e8ecf0; border-radius: 12px; padding: 40px; margin-bottom: 32px; }
+  .section-title { font-size: 13px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 32px; }
+
+  .flow-container { display: flex; align-items: center; gap: 0; overflow-x: auto; padding-bottom: 8px; }
+
+  .node {
+    flex-shrink: 0;
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px 20px;
+    min-width: 140px;
+    max-width: 160px;
+    text-align: center;
+    position: relative;
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: default;
+  }
+  .node:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-2px); }
+
+  .node-icon { font-size: 22px; margin-bottom: 8px; }
+  .node-title { font-size: 13px; font-weight: 600; color: #1a1a2e; line-height: 1.3; }
+  .node-sub { font-size: 11px; color: #9ca3af; margin-top: 4px; line-height: 1.4; }
+  .node-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 20px;
+    margin-top: 6px;
+  }
+
+  /* Node colors */
+  .node-blue  { border-color: #bfdbfe; background: #eff6ff; }
+  .node-blue .node-title { color: #1d4ed8; }
+  .node-blue .node-badge { background: #dbeafe; color: #1d4ed8; }
+
+  .node-green { border-color: #bbf7d0; background: #f0fdf4; }
+  .node-green .node-title { color: #15803d; }
+  .node-green .node-badge { background: #dcfce7; color: #15803d; }
+
+  .node-purple { border-color: #e9d5ff; background: #faf5ff; }
+  .node-purple .node-title { color: #7c3aed; }
+  .node-purple .node-badge { background: #ede9fe; color: #7c3aed; }
+
+  .node-orange { border-color: #fed7aa; background: #fff7ed; }
+  .node-orange .node-title { color: #c2410c; }
+  .node-orange .node-badge { background: #ffedd5; color: #c2410c; }
+
+  .node-gray { border-color: #e2e8f0; background: #f8fafc; }
+  .node-gray .node-title { color: #475569; }
+  .node-gray .node-badge { background: #f1f5f9; color: #475569; }
+
+  /* Arrows */
+  .arrow {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 8px;
+    gap: 2px;
+  }
+  .arrow-line { width: 40px; height: 1.5px; background: #cbd5e1; position: relative; }
+  .arrow-line::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: -4px;
+    width: 0; height: 0;
+    border-left: 7px solid #cbd5e1;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+  }
+  .arrow-label { font-size: 10px; color: #94a3b8; white-space: nowrap; }
+
+  /* Memory system box */
+  .memory-box {
+    border: 2px dashed #c7d2fe;
+    border-radius: 14px;
+    padding: 20px 24px;
+    background: #f5f3ff;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .memory-box-label {
+    position: absolute;
+    top: -11px;
+    left: 16px;
+    background: #f5f3ff;
+    padding: 0 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #7c3aed;
+    letter-spacing: 0.3px;
+  }
+  .memory-box-inner { display: flex; align-items: center; gap: 0; }
+
+  /* Details section */
+  .details-section { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+  @media (max-width: 768px) { .details-section { grid-template-columns: 1fr; } }
+
+  .detail-card {
+    background: #fff;
+    border: 1px solid #e8ecf0;
+    border-radius: 10px;
+    padding: 20px;
+    transition: box-shadow 0.2s;
+  }
+  .detail-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .detail-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .detail-card-icon { font-size: 18px; }
+  .detail-card-title { font-size: 13px; font-weight: 700; color: #1a1a2e; }
+  .detail-card-desc { font-size: 12px; color: #6b7280; line-height: 1.7; }
+  .detail-card-list { list-style: none; padding: 0; }
+  .detail-card-list li { font-size: 12px; color: #6b7280; padding: 3px 0; padding-left: 14px; position: relative; }
+  .detail-card-list li::before { content: '·'; position: absolute; left: 0; color: #94a3b8; font-weight: 700; }
+
+  .tag { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin: 2px 2px 0 0; }
+  .tag-blue { background: #dbeafe; color: #1d4ed8; }
+  .tag-green { background: #dcfce7; color: #15803d; }
+  .tag-purple { background: #ede9fe; color: #7c3aed; }
+
+  /* Note */
+  .note {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-left: 3px solid #f59e0b;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 32px;
+    font-size: 12px;
+    color: #78350f;
+    line-height: 1.7;
+  }
+  .note strong { color: #92400e; }
+
+  /* Footer */
+  .footer { text-align: center; font-size: 11px; color: #cbd5e1; padding: 24px 0 40px; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-inner">
+    <h1>记忆系统架构 · 智能问数平台</h1>
+    <p>指标知识库 + SQL 生成引擎，与业务数据库物理隔离部署</p>
+    <div class="stats">
+      <div class="stat"><span class="stat-value">2</span><span class="stat-label">系统节点</span></div>
+      <div class="stat"><span class="stat-value">独立</span><span class="stat-label">部署隔离</span></div>
+      <div class="stat"><span class="stat-value">SQL</span><span class="stat-label">唯一产出物</span></div>
+      <div class="stat"><span class="stat-value">0</span><span class="stat-label">直连数据库</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- 注意事项 -->
+  <div class="note">
+    <strong>📌 关键说明：</strong>记忆系统与业务数据库<strong>完全隔离</strong>，不持有任何数据库连接。
+    记忆系统的唯一产出是 SQL 语句，由智能问数平台负责连库执行并返回结果。
+    记忆系统所在机器仅需访问 LLM API（Anthropic/OpenAI），无需访问内网数据库。
+  </div>
+
+  <!-- 主流程 -->
+  <div class="flow-section">
+    <div class="section-title">主流程</div>
+    <div class="flow-container">
+
+      <!-- 用户 -->
+      <div class="node node-blue">
+        <div class="node-icon">👤</div>
+        <div class="node-title">用户</div>
+        <div class="node-sub">自然语言提问</div>
+        <span class="node-badge">发起方</span>
+      </div>
+
+      <div class="arrow">
+        <div class="arrow-line"></div>
+        <div class="arrow-label">提问</div>
+      </div>
+
+      <!-- 智能问数平台 -->
+      <div class="node node-blue">
+        <div class="node-icon">🖥️</div>
+        <div class="node-title">智能问数平台</div>
+        <div class="node-sub">问题路由 & 结果返回</div>
+        <span class="node-badge">中枢</span>
+      </div>
+
+      <div class="arrow">
+        <div class="arrow-line"></div>
+        <div class="arrow-label">转发问题</div>
+      </div>
+
+      <!-- 记忆系统（虚线框） -->
+      <div class="memory-box">
+        <div class="memory-box-label">🧠 记忆系统（隔离部署）</div>
+        <div class="memory-box-inner">
+
+          <div class="node node-purple" style="border:none; background:transparent; min-width:120px;">
+            <div class="node-icon">🔍</div>
+            <div class="node-title">意图识别</div>
+            <div class="node-sub">LLM 解析<br/>问题意图</div>
+          </div>
+
+          <div class="arrow">
+            <div class="arrow-line"></div>
+          </div>
+
+          <div class="node node-purple" style="border:none; background:transparent; min-width:120px;">
+            <div class="node-icon">📚</div>
+            <div class="node-title">知识库检索</div>
+            <div class="node-sub">Weaviate<br/>Neo4j</div>
+          </div>
+
+          <div class="arrow">
+            <div class="arrow-line"></div>
+          </div>
+
+          <div class="node node-purple" style="border:none; background:transparent; min-width:120px;">
+            <div class="node-icon">⚙️</div>
+            <div class="node-title">SQL 组装</div>
+            <div class="node-sub">LLM 生成<br/>最终 SQL</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="arrow">
+        <div class="arrow-line"></div>
+        <div class="arrow-label">返回 SQL</div>
+      </div>
+
+      <!-- 智能问数平台（执行） -->
+      <div class="node node-green">
+        <div class="node-icon">🔗</div>
+        <div class="node-title">连库执行</div>
+        <div class="node-sub">智能问数平台<br/>执行 SQL</div>
+        <span class="node-badge">查数据</span>
+      </div>
+
+      <div class="arrow">
+        <div class="arrow-line"></div>
+        <div class="arrow-label">数据结果</div>
+      </div>
+
+      <!-- 业务数据库 -->
+      <div class="node node-orange">
+        <div class="node-icon">🗄️</div>
+        <div class="node-title">业务数据库</div>
+        <div class="node-sub">Doris / MySQL<br/>数据仓库</div>
+        <span class="node-badge">数据源</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 详细说明卡片 -->
+  <div class="details-section">
+
+    <div class="detail-card">
+      <div class="detail-card-header">
+        <span class="detail-card-icon">🖥️</span>
+        <span class="detail-card-title">智能问数平台</span>
+      </div>
+      <div class="detail-card-desc">负责用户交互的中枢系统，持有数据库连接权限。</div>
+      <ul class="detail-card-list" style="margin-top:10px;">
+        <li>接收用户自然语言提问</li>
+        <li>携带 user_id + project 转发给记忆系统</li>
+        <li>接收记忆系统返回的 SQL</li>
+        <li>连接业务数据库执行 SQL</li>
+        <li>格式化结果返回给用户</li>
+      </ul>
+      <div style="margin-top:10px;">
+        <span class="tag tag-blue">连接数据库</span>
+        <span class="tag tag-blue">用户交互</span>
+      </div>
+    </div>
+
+    <div class="detail-card">
+      <div class="detail-card-header">
+        <span class="detail-card-icon">🧠</span>
+        <span class="detail-card-title">记忆系统（隔离机器）</span>
+      </div>
+      <div class="detail-card-desc">指标知识库 + SQL 生成引擎，<strong>不连接任何业务数据库</strong>。</div>
+      <ul class="detail-card-list" style="margin-top:10px;">
+        <li>接收问题 + project 参数</li>
+        <li>LLM 识别意图（指标、时间、维度）</li>
+        <li>Weaviate 向量检索匹配指标</li>
+        <li>Neo4j 查询指标血缘关系</li>
+        <li>LLM 组装生成 SQL，返回给平台</li>
+      </ul>
+      <div style="margin-top:10px;">
+        <span class="tag tag-purple">Weaviate</span>
+        <span class="tag tag-purple">Neo4j</span>
+        <span class="tag tag-purple">LLM API</span>
+      </div>
+    </div>
+
+    <div class="detail-card">
+      <div class="detail-card-header">
+        <span class="detail-card-icon">📋</span>
+        <span class="detail-card-title">机器配置需求</span>
+      </div>
+      <div class="detail-card-desc">记忆系统所在机器的最低配置要求。</div>
+      <ul class="detail-card-list" style="margin-top:10px;">
+        <li>CPU：4 核+，内存：8GB+</li>
+        <li>存储：50GB+（知识库数据）</li>
+        <li>需要访问：LLM API（出网）</li>
+        <li>不需要访问：内网数据库</li>
+        <li>OS：Ubuntu 20.04+ 推荐</li>
+        <li>Java 17（Neo4j 依赖）</li>
+      </ul>
+      <div style="margin-top:10px;">
+        <span class="tag tag-green">4C8G 起步</span>
+        <span class="tag tag-green">出网即可</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 数据流补充 -->
+  <div class="flow-section">
+    <div class="section-title">接口数据流（记忆系统视角）</div>
+    <div class="flow-container">
+
+      <div class="node node-blue">
+        <div class="node-icon">📥</div>
+        <div class="node-title">输入</div>
+        <div class="node-sub">question<br/>project<br/>user_id</div>
+      </div>
+
+      <div class="arrow">
+        <div class="arrow-line"></div>
+        <div class="arrow-label">HTTP POST</div>
+      </div>
+
+      <div class="node node-purple">
+        <div class="node-icon">🔍</div>
+        <div class="node-title">意图解析</div>
+        <div class="node-sub">intent / metrics<br/>time_range<br/>dimensions</div>
+      </div>
+
+      <div class="arrow">
+        <div class="arrow-line"></div>
+      </div>
+
+      <div class="node node-purple">
+        <div class="node-icon">📚</div>
+        <div class="node-title">指标召回</div>
+        <div class="node-sub">向量检索<br/>血缘查询<br/>sql_hint</div>
+      </div>
+
+      <div class="arrow">
+        <div class="arrow-line"></div>
+      </div>
+
+      <div class="node node-purple">
+        <div class="node-icon">⚙️</div>
+        <div class="node-title">SQL 生成</div>
+        <div class="node-sub">填充日期<br/>拼接条件<br/>格式化</div>
+      </div>
+
+      <div class="arrow">
+        <div class="arrow-line"></div>
+        <div class="arrow-label">HTTP Response</div>
+      </div>
+
+      <div class="node node-green">
+        <div class="node-icon">📤</div>
+        <div class="node-title">输出</div>
+        <div class="node-sub">sql: "select..."<br/>metrics: [...]<br/>intent: "trend"</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Generated by 小D · DataClaw</div>
+
+</body>
+</html>
