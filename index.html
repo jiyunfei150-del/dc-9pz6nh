@@ -11,345 +11,389 @@
     background: #f0f2f5;
     color: #1a1a2e;
     min-height: 100vh;
-    padding: 40px 24px;
+    padding: 40px 32px 60px;
   }
+  .page { max-width: 860px; margin: 0 auto; }
 
-  .page { max-width: 980px; margin: 0 auto; }
+  .header { margin-bottom: 28px; }
+  .header h1 { font-size: 20px; font-weight: 700; color: #1a1a2e; }
+  .header p  { font-size: 13px; color: #6b7280; margin-top: 5px; }
 
-  /* Header */
-  .header { margin-bottom: 32px; }
-  .header h1 { font-size: 22px; font-weight: 700; color: #1a1a2e; }
-  .header p { font-size: 13px; color: #6b7280; margin-top: 6px; }
-  .badges { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-  .badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
-  .badge-orange { background: #ffedd5; color: #c2410c; }
-  .badge-green  { background: #dcfce7; color: #15803d; }
-  .badge-blue   { background: #dbeafe; color: #1d4ed8; }
-
-  /* Note */
   .note {
-    background: #fffbeb;
-    border: 1px solid #fde68a;
-    border-left: 4px solid #f59e0b;
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-size: 12px;
-    color: #78350f;
-    line-height: 1.7;
-    margin-bottom: 28px;
+    background: #fffbeb; border: 1px solid #fde68a;
+    border-left: 4px solid #f59e0b; border-radius: 8px;
+    padding: 11px 16px; font-size: 12px; color: #78350f;
+    line-height: 1.7; margin-bottom: 32px;
   }
 
-  /* 整体流程卡片 */
-  .flow-card {
+  /* ── 主画布 ── */
+  .canvas {
     background: #fff;
     border: 1px solid #e2e8f0;
     border-radius: 14px;
-    padding: 32px;
-    margin-bottom: 24px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-  }
-  .flow-card-title {
-    font-size: 11px;
-    font-weight: 700;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 28px;
+    padding: 40px 48px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
   }
 
-  /* 泳道 */
-  .lanes { display: flex; gap: 0; border: 1.5px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
-
-  .lane {
-    flex: 1;
-    border-right: 1.5px solid #e2e8f0;
-    display: flex;
-    flex-direction: column;
-  }
-  .lane:last-child { border-right: none; }
-
-  .lane-header {
-    padding: 12px 16px;
-    font-size: 12px;
-    font-weight: 700;
-    text-align: center;
-    letter-spacing: 0.3px;
-  }
-  .lane-header.blue   { background: #eff6ff; color: #1d4ed8; border-bottom: 1.5px solid #bfdbfe; }
-  .lane-header.purple { background: #faf5ff; color: #7c3aed; border-bottom: 1.5px solid #ddd6fe; }
-  .lane-header.green  { background: #f0fdf4; color: #15803d; border-bottom: 1.5px solid #bbf7d0; }
-  .lane-header.orange { background: #fff7ed; color: #c2410c; border-bottom: 1.5px solid #fed7aa; }
-
-  .lane-body {
-    flex: 1;
-    padding: 20px 12px;
+  /* 主干竖线容器 */
+  .trunk {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    position: relative;
   }
-  .lane-body.blue-bg   { background: #f8fbff; }
-  .lane-body.purple-bg { background: #fdfbff; }
-  .lane-body.green-bg  { background: #f7fdf9; }
-  .lane-body.orange-bg { background: #fffcf8; }
 
-  /* Node in lane */
-  .lnode {
-    width: 100%;
-    border-radius: 8px;
-    padding: 12px 10px;
+  /* 主干节点（智能问数平台 / 用户） */
+  .main-node {
+    width: 200px;
+    border-radius: 10px;
+    padding: 14px 16px;
     text-align: center;
     border: 1.5px solid;
-    transition: box-shadow 0.2s;
+    position: relative;
+    z-index: 2;
+    background: #fff;
   }
-  .lnode:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
-  .lnode-icon { font-size: 18px; margin-bottom: 5px; }
-  .lnode-title { font-size: 12px; font-weight: 700; line-height: 1.3; }
-  .lnode-sub { font-size: 11px; margin-top: 4px; line-height: 1.5; }
+  .main-node .icon { font-size: 20px; margin-bottom: 5px; }
+  .main-node .title { font-size: 13px; font-weight: 700; line-height: 1.3; }
+  .main-node .sub   { font-size: 11px; margin-top: 3px; line-height: 1.5; }
 
-  .lnode-blue   { border-color: #bfdbfe; background: #eff6ff; }
-  .lnode-blue .lnode-title { color: #1d4ed8; }
-  .lnode-blue .lnode-sub   { color: #60a5fa; }
+  .node-user   { border-color: #bfdbfe; background: #eff6ff; }
+  .node-user .title { color: #1d4ed8; }
+  .node-user .sub   { color: #93c5fd; }
 
-  .lnode-purple { border-color: #ddd6fe; background: #f5f3ff; }
-  .lnode-purple .lnode-title { color: #6d28d9; }
-  .lnode-purple .lnode-sub   { color: #a78bfa; }
+  .node-plat   { border-color: #a5f3fc; background: #ecfeff; }
+  .node-plat .title { color: #0e7490; }
+  .node-plat .sub   { color: #67e8f9; }
 
-  .lnode-green  { border-color: #bbf7d0; background: #f0fdf4; }
-  .lnode-green .lnode-title  { color: #15803d; }
-  .lnode-green .lnode-sub    { color: #4ade80; }
-
-  .lnode-orange { border-color: #fed7aa; background: #fff7ed; }
-  .lnode-orange .lnode-title { color: #c2410c; }
-  .lnode-orange .lnode-sub   { color: #fb923c; }
-
-  /* 垂直箭头 */
+  /* 竖向箭头 */
   .v-arrow {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
+    display: flex; flex-direction: column; align-items: center;
+    position: relative; z-index: 1;
   }
-  .v-line { width: 1.5px; height: 20px; background: #cbd5e1; }
-  .v-tip {
+  .v-line { width: 2px; background: #cbd5e1; }
+  .v-arrowhead {
     width: 0; height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 7px solid #cbd5e1;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid #cbd5e1;
   }
-  .v-label { font-size: 10px; color: #94a3b8; margin: 2px 0; white-space: nowrap; }
+  .v-label {
+    font-size: 11px; color: #94a3b8;
+    background: #fff; padding: 0 6px;
+    position: absolute; white-space: nowrap;
+    left: calc(50% + 6px);
+  }
 
-  /* 跨泳道箭头区域 */
-  .cross-arrows {
+  /* 横向展开行 */
+  .expand-row {
     display: flex;
     align-items: center;
-    gap: 0;
-    margin: 16px 0;
-    padding: 0 32px;
+    width: 100%;
+    position: relative;
+    margin: 0;
   }
-  .cross-arrow {
+  /* 占位，让中间主干对齐 */
+  .expand-row .spacer { flex: 1; }
+  .expand-row .center { flex-shrink: 0; }
+
+  /* 横向连接线 */
+  .h-connector {
     flex: 1;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 4px;
+    position: relative;
+    height: 2px;
   }
-  .h-line { flex: 1; height: 1.5px; background: #cbd5e1; position: relative; }
-  .h-tip {
+  .h-connector .line {
+    flex: 1; height: 2px;
+  }
+  .h-connector .arrow-r {
     width: 0; height: 0;
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
-    border-left: 7px solid #cbd5e1;
+    border-left: 7px solid;
     flex-shrink: 0;
   }
-  .h-label-wrap { display: flex; flex-direction: column; align-items: center; }
-  .h-label { font-size: 10px; color: #94a3b8; white-space: nowrap; background: #fff; padding: 0 4px; margin-top: -6px; }
-
-  /* 详情卡片 */
-  .detail-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
-  @media(max-width:600px){ .detail-cards { grid-template-columns: 1fr; } }
-
-  .dcard {
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 18px 20px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  .h-connector .arrow-l {
+    width: 0; height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-right: 7px solid;
+    flex-shrink: 0;
   }
-  .dcard-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-  .dcard-icon { font-size: 16px; }
-  .dcard-title { font-size: 13px; font-weight: 700; color: #1a1a2e; }
-  .dcard ul { padding-left: 0; list-style: none; }
-  .dcard ul li { font-size: 12px; color: #6b7280; padding: 3px 0 3px 14px; position: relative; line-height: 1.5; }
-  .dcard ul li::before { content: '▸'; position: absolute; left: 0; color: #cbd5e1; font-size: 10px; top: 4px; }
+  .h-connector.to-right .line { background: #a78bfa; }
+  .h-connector.to-right .arrow-r { border-left-color: #a78bfa; }
+  .h-connector.from-right .line { background: #a78bfa; }
+  .h-connector.from-right .arrow-l { border-right-color: #a78bfa; }
 
-  .footer { text-align: center; font-size: 11px; color: #cbd5e1; padding: 20px 0; }
+  .h-connector.to-right-db .line { background: #6ee7b7; }
+  .h-connector.to-right-db .arrow-r { border-left-color: #6ee7b7; }
+  .h-connector.from-right-db .line { background: #6ee7b7; }
+  .h-connector.from-right-db .arrow-l { border-right-color: #6ee7b7; }
+
+  /* 横向连接标签 */
+  .h-label {
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: #94a3b8;
+    white-space: nowrap;
+    background: #fff;
+    padding: 0 4px;
+  }
+
+  /* 侧边展开面板 */
+  .side-panel {
+    border-radius: 10px;
+    padding: 14px 16px;
+    border: 1.5px solid;
+    flex-shrink: 0;
+  }
+  .side-panel .sp-title { font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+  .side-panel .sp-steps { display: flex; flex-direction: column; gap: 6px; }
+  .side-panel .sp-step {
+    display: flex; align-items: flex-start; gap: 6px;
+    font-size: 11px; line-height: 1.4;
+  }
+  .side-panel .sp-step .num {
+    width: 16px; height: 16px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+
+  .panel-purple { border-color: #ddd6fe; background: #faf5ff; }
+  .panel-purple .sp-title { color: #6d28d9; }
+  .panel-purple .sp-step .num { background: #ede9fe; color: #6d28d9; }
+  .panel-purple .sp-step .text { color: #7c3aed; }
+
+  .panel-green { border-color: #a7f3d0; background: #f0fdf4; }
+  .panel-green .sp-title { color: #065f46; }
+  .panel-green .sp-step .num { background: #d1fae5; color: #065f46; }
+  .panel-green .sp-step .text { color: #047857; }
+
+  /* 标注徽章 */
+  .node-badge {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 20px; margin-top: 5px;
+  }
+  .badge-blue   { background: #dbeafe; color: #1d4ed8; }
+  .badge-cyan   { background: #cffafe; color: #0e7490; }
+  .badge-purple { background: #ede9fe; color: #6d28d9; }
+  .badge-green  { background: #d1fae5; color: #065f46; }
+
+  .footer { text-align: center; font-size: 11px; color: #cbd5e1; padding-top: 28px; }
 </style>
 </head>
 <body>
 <div class="page">
 
   <div class="header">
-    <h1>记忆系统架构 · 智能问数平台</h1>
-    <p>指标知识库 + SQL 生成引擎，与业务数据库物理隔离部署</p>
-    <div class="badges">
-      <span class="badge badge-orange">⚠️ 记忆系统不连数据库</span>
-      <span class="badge badge-green">✅ 唯一产出：SQL 语句</span>
-      <span class="badge badge-blue">🔒 物理隔离部署</span>
-    </div>
+    <h1>记忆系统 · 智能问数平台架构</h1>
+    <p>主干流程竖向展示，调用外部系统横向展开</p>
   </div>
 
   <div class="note">
-    <strong>📌 核心说明：</strong>
-    记忆系统部署在独立隔离机器上，<strong>不持有任何数据库连接</strong>，只需出网访问 LLM API。
-    智能问数平台负责连库执行，记忆系统只负责"看懂问题 → 生成 SQL"。
-    采购机器只需要保证能访问外网（Anthropic/OpenAI API），无需访问内网数据库。
+    📌 <strong>记忆系统只产出 SQL，不连任何数据库。</strong>
+    采购机器只需保证能出网访问 LLM API，无需访问内网数仓。连库执行由智能问数平台负责。
   </div>
 
-  <!-- 泳道主流程 -->
-  <div class="flow-card">
-    <div class="flow-card-title">主流程 · 泳道视图</div>
+  <div class="canvas">
+    <div class="trunk">
 
-    <div class="lanes">
-
-      <!-- 泳道1：用户 -->
-      <div class="lane">
-        <div class="lane-header blue">👤 用户</div>
-        <div class="lane-body blue-bg">
-          <div class="lnode lnode-blue">
-            <div class="lnode-icon">💬</div>
-            <div class="lnode-title">发起提问</div>
-            <div class="lnode-sub">自然语言<br/>如：本周DAU多少</div>
-          </div>
-          <div class="v-arrow">
-            <div class="v-line" style="height:28px;"></div>
-          </div>
-          <div class="lnode lnode-blue">
-            <div class="lnode-icon">📊</div>
-            <div class="lnode-title">收到结果</div>
-            <div class="lnode-sub">数据表格<br/>图表展示</div>
-          </div>
-        </div>
+      <!-- ① 用户发起提问 -->
+      <div class="main-node node-user">
+        <div class="icon">👤</div>
+        <div class="title">用户</div>
+        <div class="sub">发起自然语言提问<br/>如：本周 DAU 多少？</div>
+        <span class="node-badge badge-blue">发起方</span>
       </div>
 
-      <!-- 泳道2：智能问数平台 -->
-      <div class="lane">
-        <div class="lane-header blue">🖥️ 智能问数平台</div>
-        <div class="lane-body blue-bg">
-          <div class="lnode lnode-blue">
-            <div class="lnode-icon">📨</div>
-            <div class="lnode-title">接收问题</div>
-            <div class="lnode-sub">附带 user_id<br/>project 参数</div>
-          </div>
-          <div class="v-arrow">
-            <div class="v-line"></div>
-            <div class="v-label">转发</div>
-            <div class="v-tip"></div>
-          </div>
-          <div class="lnode lnode-blue">
-            <div class="lnode-icon">📬</div>
-            <div class="lnode-title">接收 SQL</div>
-            <div class="lnode-sub">来自记忆系统<br/>的返回结果</div>
-          </div>
-          <div class="v-arrow">
-            <div class="v-line"></div>
-            <div class="v-label">执行</div>
-            <div class="v-tip"></div>
-          </div>
-          <div class="lnode lnode-green">
-            <div class="lnode-icon">🔗</div>
-            <div class="lnode-title">连库执行 SQL</div>
-            <div class="lnode-sub">持有数据库<br/>连接权限</div>
-          </div>
-        </div>
+      <!-- ↓ -->
+      <div class="v-arrow">
+        <div class="v-line" style="height:28px;"></div>
+        <div class="v-label" style="top:6px;">提问</div>
+        <div class="v-arrowhead"></div>
       </div>
 
-      <!-- 泳道3：记忆系统（隔离） -->
-      <div class="lane" style="border-left: 3px solid #7c3aed;">
-        <div class="lane-header purple">🧠 记忆系统（隔离部署）</div>
-        <div class="lane-body purple-bg">
-          <div class="lnode lnode-purple">
-            <div class="lnode-icon">🔍</div>
-            <div class="lnode-title">意图识别</div>
-            <div class="lnode-sub">LLM 解析意图<br/>指标 / 时间 / 维度</div>
-          </div>
-          <div class="v-arrow">
-            <div class="v-line"></div>
-            <div class="v-tip"></div>
-          </div>
-          <div class="lnode lnode-purple">
-            <div class="lnode-icon">📚</div>
-            <div class="lnode-title">知识库检索</div>
-            <div class="lnode-sub">Weaviate 向量召回<br/>Neo4j 血缘查询</div>
-          </div>
-          <div class="v-arrow">
-            <div class="v-line"></div>
-            <div class="v-tip"></div>
-          </div>
-          <div class="lnode lnode-purple">
-            <div class="lnode-icon">⚙️</div>
-            <div class="lnode-title">SQL 组装</div>
-            <div class="lnode-sub">LLM 生成 SQL<br/>填充日期/条件</div>
-          </div>
-          <div class="v-arrow">
-            <div class="v-line"></div>
-            <div class="v-label">返回</div>
-            <div class="v-tip"></div>
-          </div>
-          <div class="lnode lnode-purple" style="border-style:dashed;">
-            <div class="lnode-icon">📤</div>
-            <div class="lnode-title">输出 SQL</div>
-            <div class="lnode-sub">只产出 SQL<br/>不连任何数据库</div>
-          </div>
-        </div>
+      <!-- ② 智能问数平台接收 -->
+      <div class="main-node node-plat">
+        <div class="icon">🖥️</div>
+        <div class="title">智能问数平台</div>
+        <div class="sub">接收提问<br/>附带 user_id / project</div>
+        <span class="node-badge badge-cyan">中枢</span>
       </div>
 
-      <!-- 泳道4：业务数据库 -->
-      <div class="lane">
-        <div class="lane-header orange">🗄️ 业务数据库</div>
-        <div class="lane-body orange-bg">
-          <div style="flex:1; display:flex; align-items:center; justify-content:center;">
-            <div class="lnode lnode-orange" style="margin-top:80px;">
-              <div class="lnode-icon">🗄️</div>
-              <div class="lnode-title">Doris / MySQL</div>
-              <div class="lnode-sub">数据仓库<br/>仅智能问数平台可连</div>
+      <!-- ↓ 带横向展开：调用记忆系统 -->
+      <div class="v-arrow" style="position:relative; width:100%;">
+        <div style="display:flex; align-items:center; width:100%; position:relative;">
+
+          <!-- 左侧空白 -->
+          <div style="flex:1;"></div>
+
+          <!-- 中间竖线 -->
+          <div style="display:flex; flex-direction:column; align-items:center; flex-shrink:0; position:relative;">
+            <div class="v-line" style="height:20px;"></div>
+
+            <!-- 横向展开行 -->
+            <div style="display:flex; align-items:center; width:600px; position:relative;">
+              <!-- 左半（占位） -->
+              <div style="flex:1; height:2px; background:transparent;"></div>
+
+              <!-- 中心点 -->
+              <div style="width:10px; height:10px; border-radius:50%; background:#a78bfa; flex-shrink:0; margin:0 0;"></div>
+
+              <!-- 右侧：→ 记忆系统 -->
+              <div style="display:flex; align-items:center; flex:1; position:relative;">
+                <div class="h-connector to-right" style="flex:1; position:relative;">
+                  <div class="line"></div>
+                  <div class="arrow-r"></div>
+                  <span class="h-label">转发问题</span>
+                </div>
+                <div class="side-panel panel-purple" style="width:220px; margin-left:12px;">
+                  <div class="sp-title">🧠 记忆系统（隔离部署）</div>
+                  <div class="sp-steps">
+                    <div class="sp-step">
+                      <span class="num">1</span>
+                      <span class="text">意图识别：LLM 解析指标 / 时间 / 维度</span>
+                    </div>
+                    <div class="sp-step">
+                      <span class="num">2</span>
+                      <span class="text">向量检索：Weaviate 召回匹配指标</span>
+                    </div>
+                    <div class="sp-step">
+                      <span class="num">3</span>
+                      <span class="text">血缘查询：Neo4j 分析指标依赖</span>
+                    </div>
+                    <div class="sp-step">
+                      <span class="num">4</span>
+                      <span class="text">SQL 组装：LLM 生成可执行 SQL</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+
+            <!-- 回来的箭头 -->
+            <div style="display:flex; align-items:center; width:600px; margin-top:4px; position:relative;">
+              <div style="flex:1; height:2px; background:transparent;"></div>
+              <div style="width:10px; flex-shrink:0;"></div>
+              <div style="display:flex; align-items:center; flex:1; position:relative;">
+                <div class="h-connector from-right" style="flex:1; position:relative;">
+                  <div class="arrow-l"></div>
+                  <div class="line"></div>
+                  <span class="h-label">返回 SQL</span>
+                </div>
+                <div style="width:220px; margin-left:12px; padding: 5px 10px; background:#f5f3ff; border-radius:6px; border:1px dashed #ddd6fe; text-align:center;">
+                  <span style="font-size:11px; color:#7c3aed; font-weight:600;">📤 输出：SQL 语句</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="v-line" style="height:20px;"></div>
+            <div class="v-arrowhead"></div>
           </div>
+
+          <!-- 右侧空白 -->
+          <div style="flex:1;"></div>
         </div>
       </div>
 
-    </div><!-- /lanes -->
+      <!-- ③ 智能问数平台：连库执行 -->
+      <div class="main-node node-plat">
+        <div class="icon">⚡</div>
+        <div class="title">智能问数平台</div>
+        <div class="sub">基于 SQL 连接数仓<br/>执行查询，获取数据</div>
+        <span class="node-badge badge-cyan">连库执行</span>
+      </div>
 
-  </div><!-- /flow-card -->
+      <!-- ↓ 带横向展开：连接数仓 -->
+      <div class="v-arrow" style="position:relative; width:100%;">
+        <div style="display:flex; align-items:center; width:100%; position:relative;">
+          <div style="flex:1;"></div>
+          <div style="display:flex; flex-direction:column; align-items:center; flex-shrink:0; position:relative;">
+            <div class="v-line" style="height:20px;"></div>
 
-  <!-- 详情卡片 -->
-  <div class="detail-cards">
-    <div class="dcard">
-      <div class="dcard-head"><span class="dcard-icon">🧠</span><span class="dcard-title">记忆系统 · 机器要求</span></div>
-      <ul>
-        <li>CPU 4核+，内存 8GB+，存储 50GB+</li>
-        <li>操作系统：Ubuntu 20.04+ 推荐</li>
-        <li>需要出网访问 LLM API（Anthropic / OpenAI）</li>
-        <li>不需要访问内网业务数据库</li>
-        <li>Java 17（Neo4j 依赖），Python 3.10+</li>
-        <li>服务端口：8100（仅对智能问数平台开放）</li>
-      </ul>
-    </div>
-    <div class="dcard">
-      <div class="dcard-head"><span class="dcard-icon">📡</span><span class="dcard-title">接口规范</span></div>
-      <ul>
-        <li>调用方：智能问数平台 → POST /query</li>
-        <li>入参：question / project / user_id</li>
-        <li>出参：sql / intent / metrics[]</li>
-        <li>管理入口：GET /admin（指标录入 Web UI）</li>
-        <li>同步接口：POST /sync（刷新 Weaviate + Neo4j）</li>
-        <li>无数据库出口，防火墙可封闭内网端口</li>
-      </ul>
+            <div style="display:flex; align-items:center; width:600px; position:relative;">
+              <div style="flex:1; height:2px; background:transparent;"></div>
+              <div style="width:10px; height:10px; border-radius:50%; background:#6ee7b7; flex-shrink:0;"></div>
+              <div style="display:flex; align-items:center; flex:1; position:relative;">
+                <div class="h-connector to-right-db" style="flex:1; position:relative;">
+                  <div class="line"></div>
+                  <div class="arrow-r"></div>
+                  <span class="h-label">执行 SQL</span>
+                </div>
+                <div class="side-panel panel-green" style="width:220px; margin-left:12px;">
+                  <div class="sp-title">🗄️ 业务数仓</div>
+                  <div class="sp-steps">
+                    <div class="sp-step">
+                      <span class="num">1</span>
+                      <span class="text">Doris / MySQL 数据仓库</span>
+                    </div>
+                    <div class="sp-step">
+                      <span class="num">2</span>
+                      <span class="text">仅智能问数平台可连接</span>
+                    </div>
+                    <div class="sp-step">
+                      <span class="num">3</span>
+                      <span class="text">记忆系统无任何连接权限</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex; align-items:center; width:600px; margin-top:4px; position:relative;">
+              <div style="flex:1; height:2px; background:transparent;"></div>
+              <div style="width:10px; flex-shrink:0;"></div>
+              <div style="display:flex; align-items:center; flex:1; position:relative;">
+                <div class="h-connector from-right-db" style="flex:1; position:relative;">
+                  <div class="arrow-l"></div>
+                  <div class="line"></div>
+                  <span class="h-label">返回数据</span>
+                </div>
+                <div style="width:220px; margin-left:12px; padding:5px 10px; background:#f0fdf4; border-radius:6px; border:1px dashed #a7f3d0; text-align:center;">
+                  <span style="font-size:11px; color:#047857; font-weight:600;">📊 原始数据结果</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="v-line" style="height:20px;"></div>
+            <div class="v-arrowhead"></div>
+          </div>
+          <div style="flex:1;"></div>
+        </div>
+      </div>
+
+      <!-- ④ 智能问数平台：分析结果 -->
+      <div class="main-node node-plat">
+        <div class="icon">📊</div>
+        <div class="title">智能问数平台</div>
+        <div class="sub">数据分析 & 格式化<br/>生成可读结果</div>
+        <span class="node-badge badge-cyan">分析结果</span>
+      </div>
+
+      <!-- ↓ -->
+      <div class="v-arrow">
+        <div class="v-line" style="height:28px;"></div>
+        <div class="v-label" style="top:6px;">返回结果</div>
+        <div class="v-arrowhead"></div>
+      </div>
+
+      <!-- ⑤ 用户收到结果 -->
+      <div class="main-node node-user">
+        <div class="icon">✅</div>
+        <div class="title">用户</div>
+        <div class="sub">收到分析结果<br/>数据表格 / 图表展示</div>
+        <span class="node-badge badge-blue">结果接收</span>
+      </div>
+
     </div>
   </div>
 
   <div class="footer">Generated by 小D · DataClaw</div>
-
 </div>
 </body>
 </html>
